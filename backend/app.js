@@ -6,7 +6,7 @@ const routes = require("./router/auth");
 const path = require("path");
 
 dotenv.config({ path: "./config.env" });
-require("./db/con");
+require("./db/connection");
 
 app.use(express.json());
 const User = require("./model/user");
@@ -29,6 +29,6 @@ app.get("/signup", (req, res) => {
 });
 app.use(routes);
 
-app.listen(3000, () => {
-  console.log(`sarver started at port ${process.env.PORT} `);
+app.listen(process.env.PORT, () => {
+  console.log(`server started at port ${process.env.PORT} `);
 });
