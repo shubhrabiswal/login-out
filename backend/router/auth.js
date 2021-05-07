@@ -52,6 +52,11 @@ router.post("/signina", async (req, res) => {
       token = await userlogin.generateAuthToken();
       console.log(token);
 
+      res.cookie("jwtoken", token, {
+        expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
+        httpOnly:true
+      });
+
       if(!isMatch){
         res.status(400).json({error: "Invalid credentials : password "});
       }else{

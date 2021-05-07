@@ -18,6 +18,7 @@ app.get("/about", (req, res) => {
   res.send("about page");
 });
 app.get("/contact", (req, res) => {
+  // res.cookie("Test", jtok);
   res.send("contact page");
 });
 
