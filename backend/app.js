@@ -29,7 +29,7 @@ app.get("/signup", (req, res) => {
   res.send("signup page");
 });
 app.use(routes);
-
+  
 app.listen(process.env.PORT, () => {
   console.log(`server started at port ${process.env.PORT} `);
 });

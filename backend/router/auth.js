@@ -5,10 +5,12 @@ const jwt = require("jsonwebtoken");
 
 require("../db/connection");
 const User = require("../model/user");
+const authenticate = require("../middleware/authenticate")
 
-router.post("/register", async (req, res) => {
+router.post("/signup", async (req, res) => {
   const { name, email, phone, work, password, cpassword } = req.body;
-  if (!name || !email || !phone || !work || !password || !cpassword) {
+  if (!name || !email || !phone|| !work || !password || !cpassword) {    ///!phone
+    console.log(req.body);
     return res.status(422).json({ err: "plz filled properly" });
   }
 
@@ -16,7 +18,7 @@ router.post("/register", async (req, res) => {
     const userExist = await User.findOne({ email: email });
     if (userExist) {
       console.log(userExist);
-      return res.status(422).json({ error: "Email alreday Exist" });
+      return res.status(422).json({ error: "Email already Exist" });
     }
     const user = new User({
       name,
@@ -29,19 +31,21 @@ router.post("/register", async (req, res) => {
     /// pre save password hashing in user schema
     const userRegister = await user.save();
     if (userRegister) {
-      res.status(201).json({ message: "user resgister successfuly" });
+      res.status(201).json({ message: "user register successfully" });
     } else {
-      res.status(500).json({ error: "Faild to register" });
+      res.status(500).json({ error: "Failed to register" });
     }
   } catch (err) {
     console.log(err);
   }
 });
 
-router.post("/signina", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     let token;
     const { email, password } = req.body;
+    console.log(email);
+    console.log(password);
     if (!email || !password) {
       return res.status(422).json({ err: "plz fill data properly" });
     }
@@ -73,4 +77,9 @@ router.post("/signina", async (req, res) => {
   }
 });
 
+
+router.get("/about", authenticate, (req,res) => {
+  console.log("about page");
+  res.send("about page");
+});
 module.exports = router;
