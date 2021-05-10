@@ -80,6 +80,6 @@ router.post("/login", async (req, res) => {
 
 router.get("/about", authenticate, (req,res) => {
   console.log("about page");
-  res.send("about page");
+  res.status(200).send(req.rootUser);  
 });
 module.exports = router;
