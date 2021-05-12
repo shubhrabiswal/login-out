@@ -1,11 +1,14 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 const About = () => {
     const history  = useHistory();
+    // const [userData, setUserData] = useState();
+
     const callAboutPage = async () => {
         try{
-            const res = await fetch('/about', {
+            console.log("control is here")
+            const res = await fetch("/about", {
                 method:"GET",
                 headers:{
                     "Accept": "application/json",
@@ -13,8 +16,11 @@ const About = () => {
                 },
                 credentials:"include"
             });
+            console.log("here")
+            console.log("res   ",res)
             const data = await res.json();
-            console.log(data);
+            // console.log(data);
+            // setUserData(data);
 
             if(!res.status === 200){
                 const error = new Error (res.error);
@@ -22,12 +28,12 @@ const About = () => {
             }
             
         }catch(err){
-            console.log(err);
-            history.push("/login")
+            console.log("err",err);
+            history.push("/login") 
         }
     }
     
-    useEffect(() => {
+    useEffect(() => {  
         callAboutPage();
     },[]);
 
@@ -35,9 +41,9 @@ const About = () => {
     return (
         <div>
             <p> WELCOME </p>
-            <h1> About page</h1>
+            <h1> About page hrer</h1>
         </div>
-    )
+    )  
 }
 
 export default About

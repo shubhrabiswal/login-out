@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const routes = require("./router/auth");
 const path = require("path");
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
 
 dotenv.config({ path: "./config.env" });
 require("./db/connection");
@@ -14,9 +17,9 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-app.get("/about", (req, res) => {
-  res.send("about page");
-});
+// app.get("/about", (req, res) => {
+  // res.send("about page");
+// });
 app.get("/contact", (req, res) => {
   // res.cookie("Test", jtok);
   res.send("contact page");

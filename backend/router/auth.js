@@ -8,8 +8,8 @@ const User = require("../model/user");
 const authenticate = require("../middleware/authenticate")
 
 router.post("/signup", async (req, res) => {
-  const { name, email, phone, work, password, cpassword } = req.body;
-  if (!name || !email || !phone|| !work || !password || !cpassword) {    ///!phone
+  const { name, email, phone, work, password, cpassword, role } = req.body;
+  if (!name || !email || !phone|| !work || !password || !cpassword || !role) {    ///!phone
     console.log(req.body);
     return res.status(422).json({ err: "plz filled properly" });
   }
@@ -27,6 +27,7 @@ router.post("/signup", async (req, res) => {
       work,
       password,
       cpassword,
+      role
     });
     /// pre save password hashing in user schema
     const userRegister = await user.save();
@@ -40,26 +41,76 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+// router.post("/login", async (req, res) => {
+//   try {
+//     let token;
+//     const { email, password } = req.body;
+//     console.log(email);
+//     console.log(password);
+//     if (!email || !password) {
+//       return res.status(422).json({ err: "plz fill data properly" });
+//     }
+//     const userlogin = await User.findOne({ email: email });
+//     if (userlogin) {
+//       const isMatch = await bcrypt.compare(password, userlogin.password);
+      
+//       token = await userlogin.generateAuthToken();
+//       console.log(token);  
+
+//       res.cookie("jwtoken", token, {
+//       // res.cookie( token, {
+//         expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
+//         httpOnly:true
+//       });
+
+//       console.log("res.cookie",token);
+
+//       if(!isMatch){
+//         res.status(400).json({error: "Invalid credentials : password "});
+//       }else{
+//         res.json({message:"signin successful"});
+//       }
+//     }else{
+//         res.status(400).json({error:"Invalid Credentials : email"});
+      
+//     }
+    
+     
+//   } catch (err) {
+//     console.log(err);
+//   }
+// });
+
+router.post("/loginadmin", async (req, res) => {
   try {
     let token;
-    const { email, password } = req.body;
+    const { email, password} = req.body;
     console.log(email);
     console.log(password);
+    // console.log(role);
     if (!email || !password) {
       return res.status(422).json({ err: "plz fill data properly" });
     }
     const userlogin = await User.findOne({ email: email });
     if (userlogin) {
-      const isMatch = await bcrypt.compare(password, userlogin.password);
-      
-      token = await userlogin.generateAuthToken();
-      console.log(token);
 
-      res.cookie("jwtoken", token, {
-        expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
-        httpOnly:true
-      });
+      const isMatch = await bcrypt.compare(password, userlogin.password);
+      if(userlogin.role === "admin"){
+        token = await userlogin.generateAuthToken();
+        console.log(token);  
+
+        res.cookie("jwtoken", token, {
+          // res.cookie( token, {
+          expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
+          httpOnly:true
+        });
+
+        console.log("res.cookie",token);
+      }else{
+        res.status(400).json({error: "Invalid role"});
+        alert("Only admin login allowed");
+      }
+      
 
       if(!isMatch){
         res.status(400).json({error: "Invalid credentials : password "});
@@ -78,8 +129,13 @@ router.post("/login", async (req, res) => {
 });
 
 
-router.get("/about", authenticate, (req,res) => {
-  console.log("about page");
-  res.status(200).send(req.rootUser);  
+// authenticate.Authenticate
+router.get("/about",authenticate.Authenticate, (req,res) => {
+  console.log(req)
+  console.log("token",req.token);
+  console.log("about page details")
+  res.status(200).send(req.rootUser);      
 });
+
 module.exports = router;
+  

@@ -7,7 +7,7 @@ import 'react-router';
 const Signup = () => {
     const history = useHistory();
     const [user, setUser] = useState({
-        name:"",email:"",phone:"",work:"",password:"",cpassword:""
+        name:"",email:"",phone:"",work:"",password:"",cpassword:""//,role,""
     });
 
     let name,value;
@@ -37,7 +37,8 @@ const Signup = () => {
                 phone: phone, 
                 work: work, 
                 password: password,
-                cpassword: cpassword
+                cpassword: cpassword,
+                // role:role
             })
         })
         console.log("res", res);
@@ -50,7 +51,7 @@ const Signup = () => {
             window.alert("Registration Successful");
             console.log("Registration Successful");
 
-            this.props.history.push("/login");
+            history.push("/login");
         }
 
     }
@@ -110,6 +111,14 @@ const Signup = () => {
                             placeholder="Confirm Password" 
                             />
                     </div>
+                    {/* <div className="form-group">
+                        <label htmlFor="role">Role</label>
+                        <input type="role" className="form-control" name = "role" id="role" autoComplete ="off"
+                            value = {user.role}
+                            onChange = {handleInputs}
+                            placeholder="Role" 
+                            />
+                    </div> */}
                     {/* <div className="form-check">
                         <input type="checkbox" className="form-check-input" id="dropdownCheck2" />
                         <label className="form-check-label" for="dropdownCheck2">
