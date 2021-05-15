@@ -41,45 +41,45 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// router.post("/login", async (req, res) => {
-//   try {
-//     let token;
-//     const { email, password } = req.body;
-//     console.log(email);
-//     console.log(password);
-//     if (!email || !password) {
-//       return res.status(422).json({ err: "plz fill data properly" });
-//     }
-//     const userlogin = await User.findOne({ email: email });
-//     if (userlogin) {
-//       const isMatch = await bcrypt.compare(password, userlogin.password);
+router.post("/login", async (req, res) => {
+  try {
+    let token;
+    const { email, password } = req.body;
+    console.log(email);
+    console.log(password);
+    if (!email || !password) {
+      return res.status(422).json({ err: "plz fill data properly" });
+    }
+    const userlogin = await User.findOne({ email: email });
+    if (userlogin) {
+      const isMatch = await bcrypt.compare(password, userlogin.password);
       
-//       token = await userlogin.generateAuthToken();
-//       console.log(token);  
+      token = await userlogin.generateAuthToken();
+      console.log(token);  
 
-//       res.cookie("jwtoken", token, {
-//       // res.cookie( token, {
-//         expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
-//         httpOnly:true
-//       });
+      res.cookie("jwtoken", token, {
+      // res.cookie( token, {
+        expires: new Date(Date.now() + 25892000000), ///token exp in  1 month
+        httpOnly:true
+      });
 
-//       console.log("res.cookie",token);
+      console.log("res.cookie",token);
 
-//       if(!isMatch){
-//         res.status(400).json({error: "Invalid credentials : password "});
-//       }else{
-//         res.json({message:"signin successful"});
-//       }
-//     }else{
-//         res.status(400).json({error:"Invalid Credentials : email"});
+      if(!isMatch){
+        res.status(400).json({error: "Invalid credentials : password "});
+      }else{
+        res.json({message:"signin successful"});
+      }
+    }else{
+        res.status(400).json({error:"Invalid Credentials : email"});
       
-//     }
+    }
     
      
-//   } catch (err) {
-//     console.log(err);
-//   }
-// });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 router.post("/loginadmin", async (req, res) => {
   try {
@@ -95,7 +95,7 @@ router.post("/loginadmin", async (req, res) => {
     if (userlogin) {
 
       const isMatch = await bcrypt.compare(password, userlogin.password);
-      if(userlogin.role === "admin"){
+      if(userlogin.role === "doctor"){
         token = await userlogin.generateAuthToken();
         console.log(token);  
 

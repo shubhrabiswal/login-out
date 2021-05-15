@@ -1,6 +1,45 @@
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const shortid = require("shortid");
+const path = require("path");
+const multerS3 = require("multer-s3");
+const aws = require("aws-sdk");
 const User = require("../model/user");
-const Auth = require("../router/auth");
+// const Auth = require("../router/auth");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(path.dirname(__dirname), "uploads"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, shortid.generate() + "-" + file.originalname);
+  },
+});
+
+const accessKeyId = "AKIAZHZPWUIOLM66OAY6";
+const secretAccessKey = "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";
+
+const s3 = new aws.S3({
+  accessKeyId,
+  secretAccessKey,
+});
+
+exports.upload = multer({ storage });
+
+//   exports.uploadS3 = multer({
+exports.uploadS3 = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: "bucket-insta",
+    acl: "public-read",
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      cb(null, shortid.generate() + "-" + file.originalname);
+    },
+  }),
+});
 
 exports.Authenticate = async(req, res, next ) => {
     
